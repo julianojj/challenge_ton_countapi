@@ -10,4 +10,6 @@ const request = (url: string, method: string, headers?: any, data?: any): Promis
     })
 }
 
-export default request
+export {
+    request
+}
