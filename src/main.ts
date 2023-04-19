@@ -1,4 +1,5 @@
-import express from 'express'
+import express, { NextFunction, Request, Response } from 'express'
+import { ValidationException } from './core/exceptions/ValidationException'
 import { GetVisits } from './core/usecases/GetVisits'
 import { IncrementVisits } from './core/usecases/IncrementVisits'
 import { CounterAPIGateway } from './infra/adapters/CounterAPIGateway'
@@ -23,5 +24,28 @@ new VisitsRoute(
     incrementVisitsController,
     getVisitsController
 ).init()
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+    res.status(404).json({
+        code: 404,
+        message: 'resource not found'
+    })
+    next()
+})
+
+app.use((
+    err: Error &
+    ValidationException,
+    req: Request, 
+    res: Response, 
+    next: NextFunction) => {
+    const code = err.code || 500
+    const message = err.message || 'internal server error'
+    res.status(code).json({
+        code,
+        message
+    })
+    next()
+})
 
 app.listen(3000)
