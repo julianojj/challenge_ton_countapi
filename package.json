@@ -19,7 +19,7 @@
     "typescript": "^5.0.4"
   },
   "scripts": {
-    "test": "yarn jest",
+    "test": "yarn jest ./tests",
     "dev": "yarn ts-node src/main.ts"
   },
   "dependencies": {
