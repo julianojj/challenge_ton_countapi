@@ -10,7 +10,7 @@ export class CounterAPIGateway implements CounterGateway {
             'GET'
         )
         const status = response.status
-        if (status !== 200) throw new ValidationException('Error to hit $url')
+        if (status !== 200) throw new ValidationException(`Error to hit ${url}`)
         return {
             url,
             hit: response.data.value
@@ -23,7 +23,7 @@ export class CounterAPIGateway implements CounterGateway {
             'GET'
         )
         const status = response.status
-        if (status !== 200) throw new ValidationException('Error to hit $url')
+        if (status !== 200) throw new ValidationException(`Error to get ${url}`)
         return {
             url,
             hit: response.data.value
