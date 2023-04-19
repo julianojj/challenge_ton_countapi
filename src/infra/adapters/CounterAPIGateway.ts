@@ -13,7 +13,20 @@ export class CounterAPIGateway implements CounterGateway {
         if (status !== 200) throw new ValidationException('Error to hit $url')
         return {
             url,
-            hits: response.data.value
+            hit: response.data.value
+        }
+    }
+
+    async get(url: string): Promise<any> {
+        const response = await request(
+            `https://api.countapi.xyz/get/${url}/visits`,
+            'GET'
+        )
+        const status = response.status
+        if (status !== 200) throw new ValidationException('Error to hit $url')
+        return {
+            url,
+            hit: response.data.value
         }
     }
 }
