@@ -7,10 +7,18 @@ export class GetVisits {
         readonly counterGateway: CounterGateway
     ) { }
 
-    async execute(url: string): Promise<any> {
+    async execute(url: string): Promise<GetVisitsOutput> {
         if (!url) throw new ValidationException('URL cannot be empty')
-        const response = await this.counterGateway.hit(url)
-        const counter = new Counter(response.hits, response.url)
-        return counter
+        const response = await this.counterGateway.get(url)
+        const counter = new Counter(response.hit, response.url)
+        return {
+            url: counter.url,
+            visits: counter.count
+        }
     }
+}
+
+export type GetVisitsOutput = {
+    url: string,
+    visits: number
 }
