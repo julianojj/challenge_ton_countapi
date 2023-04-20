@@ -1,4 +1,5 @@
 import cors from 'cors'
+import 'dotenv/config'
 import express, { NextFunction, Request, Response } from 'express'
 import { serve, setup } from 'swagger-ui-express'
 import { ValidationException } from './core/exceptions/ValidationException'
@@ -15,61 +16,64 @@ import { IncrementVisitsController } from './infra/api/controllers/IncrementVisi
 import { UserRoute } from './infra/api/routes/UserRoute'
 import { VisitsRoute } from './infra/api/routes/VisitsRoute'
 import swaggerDocument from './infra/api/swagger'
-import { UserRepositoryMemory } from './infra/repository/UserRepositoryMemory'
+import { UserREpositoryDatabase } from './infra/repository/UserRepositoryDatabase'
 
-const app = express()
+(async () => {
+    const app = express()
 
-app.disable('x-powered-by')
+    app.disable('x-powered-by')
 
-app.use(express.json())
-app.use(cors())
-app.use('/swagger', serve, setup(swaggerDocument))
+    app.use(express.json())
+    app.use(cors())
+    app.use('/swagger', serve, setup(swaggerDocument))
 
-const counterGateway = new CounterAPIGateway()
-const userRepository = new UserRepositoryMemory()
-const hasher = new Bcrypt()
-const getVisits = new GetVisits(counterGateway)
-const incrementVisits = new IncrementVisits(counterGateway)
-const getVisitsController = new GetVisitsController(getVisits)
-const incrementVisitsController = new IncrementVisitsController(incrementVisits)
-const createUser = new CreateUser(userRepository, hasher)
-const getUser = new GetUser(userRepository)
-const createUserController = new CreateUserController(createUser)
-const getUserController = new GetUserController(getUser)
+    const counterGateway = new CounterAPIGateway()
+    const userRepository = new UserREpositoryDatabase()
+    await userRepository.init()
+    const hasher = new Bcrypt()
+    const getVisits = new GetVisits(counterGateway)
+    const incrementVisits = new IncrementVisits(counterGateway)
+    const getVisitsController = new GetVisitsController(getVisits)
+    const incrementVisitsController = new IncrementVisitsController(incrementVisits)
+    const createUser = new CreateUser(userRepository, hasher)
+    const getUser = new GetUser(userRepository)
+    const createUserController = new CreateUserController(createUser)
+    const getUserController = new GetUserController(getUser)
 
-new VisitsRoute(
-    app,
-    incrementVisitsController,
-    getVisitsController
-).init()
+    new VisitsRoute(
+        app,
+        incrementVisitsController,
+        getVisitsController
+    ).init()
 
-new UserRoute(
-    app,
-    createUserController,
-    getUserController
-).init()
+    new UserRoute(
+        app,
+        createUserController,
+        getUserController
+    ).init()
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-    res.status(404).json({
-        code: 404,
-        message: 'resource not found'
+    app.use((req: Request, res: Response, next: NextFunction) => {
+        res.status(404).json({
+            code: 404,
+            message: 'resource not found'
+        })
+        next()
     })
-    next()
-})
 
-app.use((
-    err: Error &
-    ValidationException,
-    req: Request, 
-    res: Response, 
-    next: NextFunction) => {
-    const code = err.code || 500
-    const message = err.message || 'internal server error'
-    res.status(code).json({
-        code,
-        message
+    app.use((
+        err: Error
+            & ValidationException,
+        req: Request,
+        res: Response,
+        next: NextFunction) => {
+        const code = err.code || 500
+        const message = err.message || 'internal server error'
+        res.status(code).json({
+            code,
+            message
+        })
+        next()
     })
-    next()
-})
 
-app.listen(3000)
+    app.listen(3000)
+})()
