@@ -1,7 +1,7 @@
 import ip from 'ip'
 
 const address = ip.address()
-const url = `http://${address}:3000}`
+const url = `http://${address}:3000`
 
 export default {
     openapi: '3.0.0',
