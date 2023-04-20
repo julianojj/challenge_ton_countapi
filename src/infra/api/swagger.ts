@@ -1,12 +1,17 @@
+import ip from 'ip'
+
+const address = ip.address()
+const url = `http://${address}:3000}`
+
 export default {
     openapi: '3.0.0',
     info: {
         title: 'Counter API',
-        version: '1.4.0'
+        version: '1.4.1'
     },
     servers: [
         {
-            url: 'http://localhost:3000'
+            url
         }
     ],
     paths: {
