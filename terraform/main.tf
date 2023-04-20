@@ -48,7 +48,8 @@ resource "aws_lightsail_instance" "ton_countapi" {
       "curl -fsSL https://get.docker.com -o get-docker.sh",
       "sudo sh get-docker.sh",
       "cd challenge_ton_countapi/",
-      "sudo docker compose up -d"
+      "echo 'ENV PUBLIC_IP=${aws_lightsail_instance.ton_countapi.public_ip_address}' >> Dockerfile",
+      "sudo docker compose up -d",
     ]
   }
 }
