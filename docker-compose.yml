@@ -5,4 +5,20 @@ services:
     container_name: ton_countapi
     ports:
       - '3000:3000'
+    env_file:
+      - .env
     restart: always
+    depends_on:
+      - database
+  database:
+    container_name: database
+    image: mariadb
+    env_file:
+      - .env
+    restart: always
+    volumes: 
+      - ./script.sql:/docker-entrypoint-initdb.d/script.sql
+      - database_volume:/var/lib/mssql
+
+volumes:
+  database_volume:
