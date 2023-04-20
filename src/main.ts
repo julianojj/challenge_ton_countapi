@@ -1,4 +1,6 @@
+import cors from 'cors'
 import express, { NextFunction, Request, Response } from 'express'
+import { serve, setup } from 'swagger-ui-express'
 import { ValidationException } from './core/exceptions/ValidationException'
 import { GetVisits } from './core/usecases/GetVisits'
 import { IncrementVisits } from './core/usecases/IncrementVisits'
@@ -6,12 +8,15 @@ import { CounterAPIGateway } from './infra/adapters/CounterAPIGateway'
 import { GetVisitsController } from './infra/api/controllers/GetVisitsController'
 import { IncrementVisitsController } from './infra/api/controllers/IncrementVisitsController'
 import { VisitsRoute } from './infra/api/routes/VisitsRoute'
+import swaggerDocument from './infra/api/swagger'
 
 const app = express()
 
 app.disable('x-powered-by')
 
 app.use(express.json())
+app.use(cors())
+app.use('/swagger', serve, setup(swaggerDocument))
 
 const counterGateway = new CounterAPIGateway()
 const getVisits = new GetVisits(counterGateway)
