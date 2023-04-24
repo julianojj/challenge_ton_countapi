@@ -16,7 +16,7 @@ import { IncrementVisitsController } from './infra/api/controllers/IncrementVisi
 import { UserRoute } from './infra/api/routes/UserRoute'
 import { VisitsRoute } from './infra/api/routes/VisitsRoute'
 import swaggerDocument from './infra/api/swagger'
-import { UserREpositoryDatabase } from './infra/repository/UserRepositoryDatabase'
+import { UserRepositoryDatabase } from './infra/repository/UserRepositoryDatabase'
 
 (async () => {
     const app = express()
@@ -28,7 +28,7 @@ import { UserREpositoryDatabase } from './infra/repository/UserRepositoryDatabas
     app.use('/swagger', serve, setup(swaggerDocument))
 
     const counterGateway = new CounterAPIGateway()
-    const userRepository = new UserREpositoryDatabase()
+    const userRepository = new UserRepositoryDatabase()
     await userRepository.init()
     const hasher = new Bcrypt()
     const getVisits = new GetVisits(counterGateway)

@@ -2,7 +2,7 @@ import { Pool, PoolConnection, createPool } from 'mariadb'
 import { User } from '../../core/domain/User'
 import { UserRepository } from '../../core/domain/UserRepository'
 
-export class UserREpositoryDatabase implements UserRepository {
+export class UserRepositoryDatabase implements UserRepository {
     private pool: Pool
     private connection: PoolConnection
 
