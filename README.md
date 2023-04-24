@@ -28,3 +28,7 @@ Deve-se utilizar o comando docker-compose up, que será responsável por subir a
 ## Comandos:
 
 Testes: `docker container exec -it ton_countapi exec yarn test`
+
+## Documentação:
+
+/swagger
