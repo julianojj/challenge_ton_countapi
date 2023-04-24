@@ -5,7 +5,7 @@ export default {
     openapi: '3.0.0',
     info: {
         title: 'Counter API',
-        version: '1.7.0'
+        version: '1.7.1'
     },
     servers: [
         {
