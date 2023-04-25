@@ -18,8 +18,3 @@ export class FakeCounterAPIGateway implements CounterGateway {
         return this.counters.find((hit) => hit.url === url)
     }
 }
-
-type Hits = {
-    url: string,
-    hit: number
-}
