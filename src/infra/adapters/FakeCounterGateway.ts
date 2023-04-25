@@ -1,23 +1,21 @@
+import { Counter } from '../../core/domain/Counter'
 import { CounterGateway } from './CounterGateway'
 
 export class FakeCounterAPIGateway implements CounterGateway {
-    hits: Hits[] = [
-        {
-            url: 'ton.com.br',
-            hit: 0
-        }
+    counters: Counter[] = [
+        new Counter(0, 'ton.com.br')
     ]
 
-    async hit(url: string): Promise<any> {
-        this.hits.map((hit) => {
+    async hit(url: string): Promise<void> {
+        this.counters.map((hit) => {
             if (hit.url === url) {
-                return hit.hit++
+                return hit.count++
             }
         })
     }   
 
-    async get(url: string): Promise<any> {
-        return this.hits.find((hit) => hit.url === url)
+    async get(url: string): Promise<Counter> {
+        return this.counters.find((hit) => hit.url === url)
     }
 }
 
